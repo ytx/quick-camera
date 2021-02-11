@@ -234,7 +234,17 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate {
         }
     }
      
-
+    @IBAction func actualSize(_ sender: NSMenuItem) {
+        if true, #available(OSX 10.15, *) {
+            let height = input.device.activeFormat.formatDescription.dimensions.height
+            let width = input.device.activeFormat.formatDescription.dimensions.width;
+            var currentSize = self.window.contentLayoutRect.size;
+            currentSize.width = CGFloat(position % 2 == 0 ? width : height);
+            currentSize.height = CGFloat(position % 2 == 0 ? height : width);
+            self.window.setContentSize(currentSize);
+        }
+    }
+    
     @IBAction func saveImage(_ sender: NSMenuItem) {
         if (captureSession != nil){
             if #available(OSX 10.12, *) {
