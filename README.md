@@ -6,6 +6,10 @@ Quick Camera supports mirroring (normal and reversed, both vertical and horizont
 
 You can find the app on the Mac App Store: https://itunes.apple.com/us/app/qcamera/id598853070?mt=12
 
+## my modification
+
+I added "Actual Size" menu on it.
+
 License
 -------
 Copyright 2013-2021 Simon Guest
