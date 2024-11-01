@@ -133,7 +133,7 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate {
             
             self.playerView.layer = self.captureLayer;
             self.playerView.layer?.backgroundColor = CGColor.black;
-            self.windowTitle = String(format: "Quick Camera: [%@]", device.localizedName);
+            self.windowTitle = String(format: "QuickCamera+: [%@]", device.localizedName);
             self.window.title = self.windowTitle;
             self.deviceName = device.localizedName
             self.applySettings()
