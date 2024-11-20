@@ -162,7 +162,7 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate {
     }
     
     func loadSettings(){
-        NSLog("CommandLine:%d,%@", CommandLine.argc, CommandLine.arguments[1])
+        NSLog("CommandLine:%d,%@", CommandLine.argc, CommandLine.arguments)
         if(1 < CommandLine.argc){
             self.keyPrefix = CommandLine.arguments[1]
         }
