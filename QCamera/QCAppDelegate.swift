@@ -42,6 +42,7 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate {
     
     var deviceName = "-"
     var savedDeviceName = "-"
+    var keyPrefix = ""
     var devices: [AVCaptureDevice]!;
     var captureSession: AVCaptureSession!;
     var captureLayer: AVCaptureVideoPreviewLayer!;
@@ -89,6 +90,13 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate {
         }else{
             NSLog("first time - loadSettings")
             self.loadSettings()
+            for device in self.devices {
+                if device.localizedName == self.savedDeviceName {
+                    NSLog("found saved device : %@", self.savedDeviceName)
+                    currentDevice = device
+                    break
+                }
+            }
         }
         self.selectedDeviceIndex = defaultDeviceIndex
         
@@ -154,24 +162,28 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate {
     }
     
     func loadSettings(){
+        NSLog("CommandLine:%d,%@", CommandLine.argc, CommandLine.arguments[1])
+        if(1 < CommandLine.argc){
+            self.keyPrefix = CommandLine.arguments[1]
+        }
         self.logSettings(label: "before loadSettings")
         
-        self.savedDeviceName = UserDefaults.standard.object(forKey: "deviceName") as? String ?? ""
-        self.isBorderless = UserDefaults.standard.object(forKey: "borderless") as? Bool ?? false
-        self.isMirrored = UserDefaults.standard.object(forKey: "mirrored") as? Bool ?? false
-        self.isUpsideDown = UserDefaults.standard.object(forKey: "upsideDown") as? Bool ?? false
-        self.isAspectRatioFixed = UserDefaults.standard.object(forKey: "aspectRatioFixed") as? Bool ?? false
-        self.position = UserDefaults.standard.object(forKey: "position") as? Int ?? 0
+        self.savedDeviceName = UserDefaults.standard.object(forKey: self.keyPrefix + "deviceName") as? String ?? ""
+        self.isBorderless = UserDefaults.standard.object(forKey: self.keyPrefix + "borderless") as? Bool ?? false
+        self.isMirrored = UserDefaults.standard.object(forKey: self.keyPrefix + "mirrored") as? Bool ?? false
+        self.isUpsideDown = UserDefaults.standard.object(forKey: self.keyPrefix + "upsideDown") as? Bool ?? false
+        self.isAspectRatioFixed = UserDefaults.standard.object(forKey: self.keyPrefix + "aspectRatioFixed") as? Bool ?? false
+        self.position = UserDefaults.standard.object(forKey: self.keyPrefix + "position") as? Int ?? 0
         
         if (self.isBorderless) {
             self.removeBorder()
         }
         
-        let savedW = UserDefaults.standard.object(forKey: "frameW") as? Float ?? 0
-        let savedH = UserDefaults.standard.object(forKey: "frameH") as? Float ?? 0
+        let savedW = UserDefaults.standard.object(forKey: self.keyPrefix + "frameW") as? Float ?? 0
+        let savedH = UserDefaults.standard.object(forKey: self.keyPrefix + "frameH") as? Float ?? 0
         if 100 < savedW && 100 < savedH {
-            let savedX = UserDefaults.standard.object(forKey: "frameX") as? Float ?? 100
-            let savedY = UserDefaults.standard.object(forKey: "frameY") as? Float ?? 100
+            let savedX = UserDefaults.standard.object(forKey: self.keyPrefix + "frameX") as? Float ?? 100
+            let savedY = UserDefaults.standard.object(forKey: self.keyPrefix + "frameY") as? Float ?? 100
             NSLog("loaded : x:%f,y:%f,w:%f,h:%f", savedX, savedY, savedW, savedH)
             var currentSize = self.window.contentLayoutRect.size
             currentSize.width = CGFloat(savedW)
@@ -198,16 +210,16 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate {
     
     @IBAction func saveSettings(_ sender: NSMenuItem){
         self.logSettings(label: "saveSettings")
-        UserDefaults.standard.set(self.deviceName, forKey: "deviceName")
-        UserDefaults.standard.set(self.isBorderless, forKey: "borderless")
-        UserDefaults.standard.set(self.isMirrored, forKey: "mirrored")
-        UserDefaults.standard.set(self.isUpsideDown, forKey: "upsideDown")
-        UserDefaults.standard.set(self.isAspectRatioFixed, forKey: "aspectRatioFixed")
-        UserDefaults.standard.set(self.position, forKey: "position")
-        UserDefaults.standard.set(self.window.frame.minX, forKey: "frameX")
-        UserDefaults.standard.set(self.window.frame.minY, forKey: "frameY")
-        UserDefaults.standard.set(self.window.frame.width, forKey: "frameW")
-        UserDefaults.standard.set(self.window.frame.height, forKey: "frameH")
+        UserDefaults.standard.set(self.deviceName, forKey: self.keyPrefix + "deviceName")
+        UserDefaults.standard.set(self.isBorderless, forKey: self.keyPrefix + "borderless")
+        UserDefaults.standard.set(self.isMirrored, forKey: self.keyPrefix + "mirrored")
+        UserDefaults.standard.set(self.isUpsideDown, forKey: self.keyPrefix + "upsideDown")
+        UserDefaults.standard.set(self.isAspectRatioFixed, forKey: self.keyPrefix + "aspectRatioFixed")
+        UserDefaults.standard.set(self.position, forKey: self.keyPrefix + "position")
+        UserDefaults.standard.set(self.window.frame.minX, forKey: self.keyPrefix + "frameX")
+        UserDefaults.standard.set(self.window.frame.minY, forKey: self.keyPrefix + "frameY")
+        UserDefaults.standard.set(self.window.frame.width, forKey: self.keyPrefix + "frameW")
+        UserDefaults.standard.set(self.window.frame.height, forKey: self.keyPrefix + "frameH")
     }
     
     @IBAction func clearSettings(_ sender: NSMenuItem){
@@ -433,7 +445,7 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate {
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         detectVideoDevices();
-        startCaptureWithVideoDevice(defaultDevice: defaultDeviceIndex);
+        startCaptureWithVideoDevice(defaultDevice: self.selectedDeviceIndex);
         usb.delegate = self
     }
     
