@@ -90,16 +90,16 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate {
         }else{
             NSLog("first time - loadSettings")
             self.loadSettings()
-            for device in self.devices {
-                if device.localizedName == self.savedDeviceName {
-                    NSLog("found saved device : %@", self.savedDeviceName)
-                    currentDevice = device
-                    break
-                }
+
+        }
+        for device in self.devices {
+            if device.localizedName == self.savedDeviceName {
+                NSLog("found saved device : %@", self.savedDeviceName)
+                currentDevice = device
+                break
             }
         }
-        self.selectedDeviceIndex = defaultDeviceIndex
-        
+        self.selectedDeviceIndex = defaultDeviceIndex        
         for device in self.devices {
             let deviceMenuItem = NSMenuItem(title: device.localizedName, action: #selector(deviceMenuChanged), keyEquivalent: "")
             deviceMenuItem.target = self;
