@@ -99,7 +99,7 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate {
                 break
             }
         }
-        self.selectedDeviceIndex = defaultDeviceIndex        
+        self.selectedDeviceIndex = defaultDeviceIndex
         for device in self.devices {
             let deviceMenuItem = NSMenuItem(title: device.localizedName, action: #selector(deviceMenuChanged), keyEquivalent: "")
             deviceMenuItem.target = self;
@@ -429,6 +429,7 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate {
     
     @objc func deviceMenuChanged(_ sender: NSMenuItem) {
         NSLog("Device Menu changed");
+        self.savedDeviceName = sender.title
         if (sender.state == NSControl.StateValue.on) {
             // selected the active device, so nothing to do here
             return;
