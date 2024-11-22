@@ -17,3 +17,28 @@ You may obtain a copy of the License at
 [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License.
+
+---
+
+# Modification by ytx
+
+## function to fit window to actual size of camera
+
+menu "Fit to Actual Size" perform set the window size to the device's actual size that means pixel to pixel.
+
+## save/load settings feature
+
+menu "Save Settings" saves following values into UserDefaults,
+borderless, aspectRetioFixed, mirrored, upsideDown, position, x, y, width, height and deviceName.
+the values are used while the application starting.
+multiple settings can be saved, these separated by using command line argument.
+for example, you can have 2 sets of values.
+```
+"/Applications/Quick Camera.app/Contents/MacOS/Quick Camera" 1 &
+"/Applications/Quick Camera.app/Contents/MacOS/Quick Camera" 2 &
+```
+
+menu "Clear Settings" clears *ALL* settings even if the argument applied.
+
+## prefer saved or selected device
+when video devices changed, prefer saved or selected device
